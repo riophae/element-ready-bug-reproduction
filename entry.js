@@ -1,13 +1,21 @@
 import elementReady from 'element-ready'
+import domLoaded from 'dom-loaded'
 
-const $ = document.querySelector.bind(document)
+window.elementReady = elementReady
+window.domLoaded = domLoaded
 
-elementReady('#target').then(elementReadyResult => {
-  const querySelectorResult = $('#target')
+const tests = [
+  `elementReady('#target')`,
+  `elementReady('#target', { stopOnDomReady: false, timeout: 5000 })`,
+  `domLoaded.then(() => document.querySelector('#target'))`,
+]
 
-  console.log(`elementReady('#target')`, elementReadyResult)
-  console.log(`document.querySelector('#target')`, querySelectorResult)
+Promise.all(tests.map(test => eval(test))).then(results => {
+  let resultHtml = ''
 
-  $('#element-ready-result').textContent = String(elementReadyResult)
-  $('#query-selector-result').textContent = String(querySelectorResult)
+  for (let i = 0; i < tests.length; i++) {
+    resultHtml += `<div><code>${tests[i]}</code> => <code>${results[i]}</code></div>`
+  }
+
+  document.querySelector('#result').innerHTML = resultHtml
 })

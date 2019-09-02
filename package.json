@@ -6,6 +6,7 @@
     "serve": "http-server dist"
   },
   "dependencies": {
+    "dom-loaded": "^1.2.0",
     "element-ready": "^4.1.0"
   },
   "devDependencies": {
