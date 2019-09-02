@@ -14,8 +14,12 @@ Promise.all(tests.map(test => eval(test))).then(results => {
   let resultHtml = ''
 
   for (let i = 0; i < tests.length; i++) {
-    resultHtml += `<div><code>${tests[i]}</code> => <code>${results[i]}</code></div>`
+    resultHtml += `<li>`
+    resultHtml += `<code>${tests[i]}</code>`
+    resultHtml += `<br>`
+    resultHtml += `<span class="indent"> => <code>${results[i]}</code></span>`
+    resultHtml += `</li>`
   }
 
-  document.querySelector('#result').innerHTML = resultHtml
+  document.querySelector('#results').innerHTML = `<ol>${resultHtml}</ol>`
 })
