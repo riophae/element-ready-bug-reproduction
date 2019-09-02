@@ -1,0 +1,17 @@
+{
+  "name": "element-ready-bug-reproduction",
+  "scripts": {
+    "bundle": "rm -rf dist && mkdir dist && cp static/* dist/ && webpack --mode production --output-filename bundle.js entry.js",
+    "gh-pages": "npm run bundle && gh-pages --dist dist --branch gh-pages",
+    "serve": "http-server dist"
+  },
+  "dependencies": {
+    "element-ready": "^4.1.0"
+  },
+  "devDependencies": {
+    "gh-pages": "^2.1.1",
+    "http-server": "^0.11.1",
+    "webpack": "^4.39.3",
+    "webpack-cli": "^3.3.7"
+  }
+}
