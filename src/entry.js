@@ -1,13 +1,16 @@
 import elementReady from 'element-ready'
 import domLoaded from 'dom-loaded'
+import fixedElementReady from './fixed-element-ready'
 
 window.elementReady = elementReady
 window.domLoaded = domLoaded
+window.fixedElementReady = fixedElementReady
 
 const tests = [
   `elementReady('#target')`,
   `elementReady('#target', { stopOnDomReady: false, timeout: 5000 })`,
   `domLoaded.then(() => document.querySelector('#target'))`,
+  `fixedElementReady('#target')`,
 ]
 
 Promise.all(tests.map(test => eval(test))).then(results => {
