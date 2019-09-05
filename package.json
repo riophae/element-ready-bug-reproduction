@@ -7,7 +7,8 @@
   },
   "dependencies": {
     "dom-loaded": "^1.2.0",
-    "element-ready": "^4.1.0"
+    "element-ready": "^4.1.0",
+    "p-defer": "^3.0.0"
   },
   "devDependencies": {
     "gh-pages": "^2.1.1",

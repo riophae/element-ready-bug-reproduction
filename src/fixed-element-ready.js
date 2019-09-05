@@ -1,11 +1,9 @@
 'use strict';
 const ManyKeysMap = require('many-keys-map');
+const domLoaded = require('dom-loaded');
+const pDefer = require('p-defer');
 
 const cache = new ManyKeysMap();
-
-const isDomReady = () => {
-	return document.readyState === 'interactive' || document.readyState === 'complete';
-};
 
 const elementReady = (selector, {
 	target = document,
@@ -18,31 +16,41 @@ const elementReady = (selector, {
 		return cachedPromise;
 	}
 
-	let resolve;
-	const promise = new Promise(r => { // eslint-disable-line promise/param-names
-		resolve = r;
-	});
+	let rafId;
+	const deferred = pDefer();
+	const {promise} = deferred;
+
 	cache.set(cacheKeys, promise);
 
-	let rafId;
 	const stop = () => {
 		cancelAnimationFrame(rafId);
 		cache.delete(cacheKeys, promise);
-		resolve();
+		deferred.resolve();
 	};
+
+	if (stopOnDomReady) {
+		(async () => {
+			await domLoaded;
+
+			const element = target.querySelector(selector);
+			if (element) {
+				deferred.resolve(element);
+			}
+
+			stop();
+		})();
+	}
 
 	if (timeout !== Infinity) {
 		setTimeout(stop, timeout);
 	}
 
-	// Query the `target` on every frame
+	// Interval to keep checking for it to come into the DOM
 	(function check() {
 		const element = target.querySelector(selector);
 
 		if (element) {
-			resolve(element);
-			stop();
-		} else if (stopOnDomReady && isDomReady()) {
+			deferred.resolve(element);
 			stop();
 		} else {
 			rafId = requestAnimationFrame(check);
