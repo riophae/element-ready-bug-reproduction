@@ -1,9 +1,12 @@
 'use strict';
 const ManyKeysMap = require('many-keys-map');
-const domLoaded = require('dom-loaded');
 const pDefer = require('p-defer');
 
 const cache = new ManyKeysMap();
+
+const isDomReady = () => {
+	return document.readyState === 'interactive' || document.readyState === 'complete';
+};
 
 const elementReady = (selector, {
 	target = document,
@@ -28,19 +31,6 @@ const elementReady = (selector, {
 		deferred.resolve();
 	};
 
-	if (stopOnDomReady) {
-		(async () => {
-			await domLoaded;
-
-			const element = target.querySelector(selector);
-			if (element) {
-				deferred.resolve(element);
-			}
-
-			stop();
-		})();
-	}
-
 	if (timeout !== Infinity) {
 		setTimeout(stop, timeout);
 	}
@@ -51,6 +41,8 @@ const elementReady = (selector, {
 
 		if (element) {
 			deferred.resolve(element);
+			stop();
+		} else if (stopOnDomReady && isDomReady()) {
 			stop();
 		} else {
 			rafId = requestAnimationFrame(check);
